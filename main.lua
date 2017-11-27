@@ -6,18 +6,18 @@ local Gamestate = require("libraries.hump.gamestate")
 --local Signal = require("libraries.hump.signal")
 
 --hudebug
-local hudebug = require("libraries.hudebug")
+local hudebug = require("libraries.hudebug.hudebug")
 
 function love.load()
   --GameStates set up here
-  local GameStates = {
+  local Gamestates = {
       title = require("src.states.title"),
       area = require("src.states.area"),
       pause = require("src.states.pause")
   }
 
   Gamestate.registerEvents()
-  Gamestate.switch(Gamestates.title)
+  Gamestate.switch(Gamestates.title, Gamestates)
 end
 
 function love.update(dt)
