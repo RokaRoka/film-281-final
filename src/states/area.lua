@@ -1,8 +1,3 @@
---required library
---hump
-local Gamestate = require("libraries.hump.gamestate")
-local vector = require("libraries.hump.vector")
-
 --required src
 --functions
 local textFunctions = require("src.functions.textFunctions")
@@ -21,8 +16,15 @@ function area:init()
 end
 
 function area:enter(previous, args)
-  local Gamestates = args.GameStates
+  --set up hudebug
+  hudebug.pageName(1, "Master Debug")
+  hudebug.pageName(2, "Objects")
+  hudebug.updateMsg(1, 1, "Test")
+  hudebug.setPosition(screen_data.positions.top_left:unpack())
+  hudebug.toggle()
 
+  --create player
+  local player = gameObjects.Player(screen_data.positions.center:unpack())
 end
 
 function area:update(dt)
@@ -31,7 +33,8 @@ end
 
 function area:draw()
   --draw stuff
-  end
+  hudebug.draw()
+end
 
 function area:keyreleased()
 
