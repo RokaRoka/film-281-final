@@ -1,8 +1,3 @@
---required libraries
---hump
-local Gamestate = require("libraries.hump.gamestate")
-local vector = require("libraries.hump.vector")
-
 --required src
 --functions
 local textFunctions = require("src.functions.textFunctions")
@@ -17,14 +12,15 @@ local instructionsFont = love.graphics.newFont("/resources/fonts/Postamt.ttf", 1
 --title callbacks
 local title = {}
 
+title.name = "Title"
+
 function title:init()
 
 end
 
 function title:enter(previous, args)
-  local Gamestates = args.GameStates
   --temp title object
-  titleText = love.graphics.newText(titleFont, "Inummarik")
+  titleText = love.graphics.newText(titleFont, "ayurnarman")
   titleWidth = titleText:getWidth()
   titleHeight = titleText:getHeight()
 
@@ -51,7 +47,7 @@ end
 function title:keyreleased(key)
   if (key == "space") then
     --load level
-    Gamestate.Switch(GameStates.area, Gamestates)
+    Gamestate.switch(Gamestates.area)
   end
 end
 
