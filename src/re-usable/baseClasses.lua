@@ -2,7 +2,9 @@
 --hump
 local Class = require("libraries.hump.class")
 
-Debug = Class{
+local base = {}
+
+base.Debug = Class{
 	init = function(self, text, page, index)
 		self.text = text
 		self.page = page or 1
@@ -15,14 +17,14 @@ Debug = Class{
 	end
 }
 
-function Debug:updateText(newText)
+function base.Debug:updateText(newText)
 	self.text = newText
 	Debug.HUDebugMaster.updateMsg(page, index, self.text)
 end
 
 --BASE CLASS - Object
 --PURPOSE - A base class for all  objects that appear in the world
-Object = Class{
+base.Object = Class{
 	init = function(self, x, y, w, h)
 		self.pos = vector.new(x, y)
 		self.w = w
@@ -31,9 +33,9 @@ Object = Class{
 		--bool for if the function can be drawn or not
 		self.drawable = true
 
-		self.obj_i = Object.obj_i + 1
-		Object.all[self.obj_i] = self
-		Object.obj_i = self.obj_i
+		self.obj_i = base.Object.obj_i + 1
+		base.Object.all[self.obj_i] = self
+		base.Object.obj_i = self.obj_i
 
 		self.debug = Debug("Object "..self.obj_i.." Spawned!", 1, self.obj_i)
 	end,
@@ -47,8 +49,8 @@ Object = Class{
 	end,
 
 	drawAll = function()
-		for i = 1, Object.obj_i do
-			local current = Object.all[i]
+		for i = 1, base.Object.obj_i do
+			local current = base.Object.all[i]
 			--do this later, for now, draw hitboxes
 			if current.drawable then
 				current:draw()
@@ -67,17 +69,17 @@ Object = Class{
 }
 
 --create empty update and draw function
-function Object:update(dt)
+function base.Object:update(dt)
   --bark bark bark
 end
 
-function Object:draw()
+function base.Object:draw()
   --moew meow meow
 end
 
 --BASE CLASS - ObjectUI
 --PURPOSE - A base class for all  objects that appear in the world
-ObjectUI = Class{
+base.ObjectUI = Class{
 	init = function(self, x, y, w, h)
 		self.pos = vector.new(x, y)
 		self.w = w
@@ -86,24 +88,24 @@ ObjectUI = Class{
 		--bool for if the function can be drawn or not
 		self.drawable = true
 
-		self.obj_i = ObjectUI.obj_i + 1
-		ObjectUI.all[self.obj_i] = self
-		ObjectUI.obj_i = self.obj_i
+		self.obj_i = base.ObjectUI.obj_i + 1
+		base.ObjectUI.all[self.obj_i] = self
+		base.ObjectUI.obj_i = self.obj_i
 
-		self.debug = Debug("UI Object "..self.obj_i.." Spawned!")
+		self.debug = base.Debug("UI Object "..self.obj_i.." Spawned!")
 	end,
 	all = {}, obj_i = 0,
 
 	updateAll = function(dt)
-		for i = 1, ObjectUI.obj_i do
-			local current = ObjectUI.all[i]
+		for i = 1, base.ObjectUI.obj_i do
+			local current = base.ObjectUI.all[i]
 			current:update(dt)
 		end
 	end,
 
 	drawAll = function()
-		for i = 1, ObjectUI.obj_i do
-			local current = ObjectUI.all[i]
+		for i = 1, base.ObjectUI.obj_i do
+			local current = base.ObjectUI.all[i]
 			--do this later, for now, draw hitboxes
 			if current.drawable then
 				current:draw()
@@ -122,10 +124,12 @@ ObjectUI = Class{
 }
 
 --create empty update and draw function
-  function ObjectUI:update(dt)
+  function base.ObjectUI:update(dt)
     --barko barko barko
   end
 
-  function ObjectUI:draw()
+  function base.ObjectUI:draw()
     --moewo meowo meowo
   end
+
+return base

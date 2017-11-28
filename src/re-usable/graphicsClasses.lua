@@ -1,3 +1,7 @@
+--Required Libraries
+--hump
+local Class = require("libraries.hump.class")
+
 --CLASS - Image
 --[[Purpose - To add visual flair or communicate debug information (such as walking)]]
 --[[INFO:
@@ -32,7 +36,7 @@ to the player visually]]
 	-speed based on frames i.e. 1 speed = 1 image per frame, 0.5 speed = 1 image per 2 frames
 	-file_path is FROM the images folder, since images should not be anywhere else within the game
 	-ANIMATIONS MUST BE PNG
-]] 
+]]
 Animation = Class{__includes = Part,
 	init = function(self, parent, name, filepath, frames, speed)
 		Part.init(self, parent, name)
@@ -40,7 +44,7 @@ Animation = Class{__includes = Part,
 		self.images = {}
 		self.frames = frames
 		self.speed = speed
-		
+
 		self.loaded = false
 		self.current = 1
 		self.playing = false
