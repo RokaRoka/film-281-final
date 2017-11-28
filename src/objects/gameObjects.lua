@@ -16,7 +16,10 @@ gObj.Player = Class{__includes = base.Object,
 	init = function(self, x, y)
 		base.Object.init(self, x, y, 32, 32)
 
-		
+		self.image = love.graphics.newImage("resources/images/Characters/innuk_v1.png")
+		self.imageOffset = vector.new(self.image:getDimensions())
+		self.imageOffset = -0.5 * self.imageOffset
+		self.imageOffset.y = self.imageOffset.y - 16
 
 		self.currentSpeed = vector.new(0, 0)
 	end,
@@ -97,7 +100,9 @@ end
 
 function gObj.Player:draw()
 	--draw player img, if applicable
-
+	if self.image then
+		love.graphics.draw(self.image, self.pos.x + self.imageOffset.x, self.pos.y + self.imageOffset.y)
+	end
 end
 
 return gObj
