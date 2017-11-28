@@ -1,7 +1,3 @@
---Required Libraries
---hump
-local Class = require("libraries.hump.class")
-
 local base = {}
 
 base.Debug = Class{
@@ -9,17 +5,18 @@ base.Debug = Class{
 		self.text = text
 		self.page = page or 1
 		self.index = index or 1
+
+		self.drawable = true
 	end,
-	HUDebugMaster = {},
 	Color = {75, 75, 200, 255},
 	Toggle = function()
-		Debug.HUDebugMaster.toggle()
+		hudebug.toggle()
 	end
 }
 
 function base.Debug:updateText(newText)
 	self.text = newText
-	Debug.HUDebugMaster.updateMsg(page, index, self.text)
+	hudebug.updateMsg(page, index, self.text)
 end
 
 --BASE CLASS - Object
@@ -37,12 +34,12 @@ base.Object = Class{
 		base.Object.all[self.obj_i] = self
 		base.Object.obj_i = self.obj_i
 
-		self.debug = Debug("Object "..self.obj_i.." Spawned!", 1, self.obj_i)
+		self.debug = base.Debug("Object "..self.obj_i.." Spawned!", 1, self.obj_i)
 	end,
 	all = {}, obj_i = 0,
 
 	updateAll = function(dt)
-		for i = 1, Object.obj_i do
+		for i = 1, base.Object.obj_i do
 			local current = Object.all[i]
 			current:update(dt)
 		end
@@ -58,11 +55,10 @@ base.Object = Class{
 			if current.debug.drawable then
 				love.graphics.setColor(current.debug.color)
 				love.graphics.rectangle("line", current.pos.x - (current.w/2), current.pos.y - (current.h/2), current.w, current.h)
-				love.graphics.setColor(255, 255, 255)
-
 				if current.p_trigger then
 					love.graphics.circle("line", current.pos.x, current.pos.y, current.p_trigger.shape:getRadius())
 				end
+				love.graphics.setColor(255, 255, 255)
 			end
 		end
 	end

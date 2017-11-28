@@ -1,7 +1,3 @@
---Required Libraries
---hump
-local Class = require("libraries.hump.class")
-
 title_font = love.graphics.newFont(18)
 text_font = love.graphics.newFont(14)
 Window = Class {

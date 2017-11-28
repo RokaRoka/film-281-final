@@ -1,7 +1,3 @@
---Required Libraries
---hump
-local Class = require("libraries.hump.class")
-
 --CLASS - Image
 --[[Purpose - To add visual flair or communicate debug information (such as walking)]]
 --[[INFO:
