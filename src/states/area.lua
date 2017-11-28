@@ -20,7 +20,6 @@ function area:enter(previous, args)
   hudebug.pageName(1, "Master Debug")
   hudebug.pageName(2, "Objects")
   hudebug.updateMsg(1, 1, "Test")
-  hudebug.setPosition(screen_data.positions.top_left:unpack())
   hudebug.toggle()
 
   --create player
@@ -29,15 +28,19 @@ end
 
 function area:update(dt)
   --update stuff
+  gameObjects.Object.updateAll(dt)
 end
 
 function area:draw()
   --draw stuff
+  gameObjects.Object.drawAll()
   hudebug.draw()
 end
 
-function area:keyreleased()
-
+function area:keyreleased(key)
+  if (key == "tab") then
+    hudebug.nextPage()
+  end
 end
 
 function area:keypressed(key, scancode, isrepeat)

@@ -10,7 +10,7 @@ base.Debug = Class{
 
 		self:updateText()
 	end,
-	Color = {75, 75, 200, 255},
+	color = {75, 75, 200, 255},
 	Toggle = function()
 		hudebug.toggle()
 	end
@@ -41,7 +41,7 @@ base.Object = Class{
 
 	updateAll = function(dt)
 		for i = 1, base.Object.obj_i do
-			local current = Object.all[i]
+			local current = base.Object.all[i]
 			current:update(dt)
 		end
 	end,
