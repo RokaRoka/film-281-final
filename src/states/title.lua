@@ -48,7 +48,7 @@ function title:draw()
   textFunctions.drawTextOnOffset(instructionsText, instructionsPosition, vector.new(instructionsWidth/-2, instructionsHeight/-2))
 end
 
-function title:keyreleased()
+function title:keyreleased(key)
   if (key == "space") then
     --load level
     Gamestate.Switch(GameStates.area, Gamestates)
