@@ -9,7 +9,7 @@ Signal = require("libraries.hump.signal")
 hudebug = require("libraries.hudebug.hudebug")
 
 function love.load()
-  --GameStates set up here
+  --Gamestates set up here
   Gamestates = {
       title = require("src.states.title"),
       area = require("src.states.area"),
