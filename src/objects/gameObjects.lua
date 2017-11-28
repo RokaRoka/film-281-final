@@ -1,10 +1,3 @@
---required Libraries
---hump
-local Class = require("libraries.hump.class")
-local Gamestate = require("libraries.hump.gamestate")
-local vector = require("libraries.hump.vector")
-local Signal = require("libraries.hump.signal")
-
 --required classes
 --re-usable
 local base = require("src.re-usable.baseClasses")
@@ -18,9 +11,6 @@ gObj.Player = Class{__includes = Object,
 	init = function(self, x, y)
 		base.Object.init(self, x, y, 32, 32)
 
-		self.in_range_of = {}
-
-		self.drawable = true
 
 		self.currentSpeed = vector.new(0, 0)
 	end,
@@ -31,10 +21,8 @@ gObj.Player = Class{__includes = Object,
 }
 
 function gObj.Player:update(dt)
-	if not self.busy then
-		self:walk(dt)
-		self:checkAction(dt)
-	end
+	self:walk(dt)
+	--self:checkAction(dt)
 end
 
 function gObj.Player:walk(dt)
@@ -65,18 +53,13 @@ function gObj.Player:move(dt, dx, dy)
 end
 
 function gObj.Player:checkAction(dt)
-	if self.in_range_of[1] then
+	--if self.in_range_of[1] then
 		--self.debug.text = "Player talking!"
 		--self.in_range_of[1].interact:response()
-	end
+	--end
 end
 
 function gObj.Player:draw()
-	if self.debug_img and self.debug.drawable then
-		self.debug_img:draw()
-	elseif self.currentAnim then
-		self.currentAnim:draw()
-	end
 	love.graphics.print(self.debug.text, 600, 10)
 end
 

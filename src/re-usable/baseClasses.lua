@@ -1,12 +1,14 @@
 local base = {}
 
 base.Debug = Class{
-	init = function(self, text, page, index)
+	init = function(self, text, index, page)
 		self.text = text
-		self.page = page or 1
 		self.index = index or 1
+		self.page = page or 2
 
 		self.drawable = true
+
+		self:updateText()
 	end,
 	Color = {75, 75, 200, 255},
 	Toggle = function()
@@ -14,9 +16,8 @@ base.Debug = Class{
 	end
 }
 
-function base.Debug:updateText(newText)
-	self.text = newText
-	hudebug.updateMsg(page, index, self.text)
+function base.Debug:updateText()
+	hudebug.updateMsg(self.page, self.index, self.text)
 end
 
 --BASE CLASS - Object
@@ -34,7 +35,7 @@ base.Object = Class{
 		base.Object.all[self.obj_i] = self
 		base.Object.obj_i = self.obj_i
 
-		self.debug = base.Debug("Object "..self.obj_i.." Spawned!", 1, self.obj_i)
+		self.debug = base.Debug("Object "..self.obj_i.." Spawned!", self.obj_i)
 	end,
 	all = {}, obj_i = 0,
 
@@ -67,6 +68,9 @@ base.Object = Class{
 --create empty update and draw function
 function base.Object:update(dt)
   --bark bark bark
+	if self.debug then
+		self.debug:updateText()
+	end
 end
 
 function base.Object:draw()
@@ -88,7 +92,7 @@ base.ObjectUI = Class{
 		base.ObjectUI.all[self.obj_i] = self
 		base.ObjectUI.obj_i = self.obj_i
 
-		self.debug = base.Debug("UI Object "..self.obj_i.." Spawned!")
+		self.debug = base.Debug("UI Object "..self.obj_i.." Spawned!", self.obj_i)
 	end,
 	all = {}, obj_i = 0,
 
@@ -122,6 +126,9 @@ base.ObjectUI = Class{
 --create empty update and draw function
   function base.ObjectUI:update(dt)
     --barko barko barko
+		if self.debug then
+			self.debug:updateText()
+		end
   end
 
   function base.ObjectUI:draw()
