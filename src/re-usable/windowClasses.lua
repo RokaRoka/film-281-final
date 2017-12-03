@@ -1,6 +1,9 @@
-title_font = love.graphics.newFont(18)
-text_font = love.graphics.newFont(14)
-Window = Class {
+w = {}
+
+w.title_font = love.graphics.newFont(18)
+w.text_font = love.graphics.newFont(14)
+
+w.Window = Class {
     init = function(self, x, y, w, h, winImg, parent)
         --appearence
         self.pos = vector.new(x or 0, y or 0)
@@ -9,13 +12,13 @@ Window = Class {
         self.winImg = winImg or Window.img.default
 
         --spritebatch!
-        self.windowBat = Window.windowSprBat(self.w, self.h, self.winImg)
+        self.windowBat = w.Window.windowSprBat(self.w, self.h, self.winImg)
         --self.arrow = love.graphics.newQuad(64+16, 16, 16, 16, raw_imgs.window.default:getDimensions())
 
         --Add window to onScreen array
-        Window.onScreeni = #Window.onScreen + 1
-        self.onScreeni = Window.onScreeni
-        Window.onScreen[Window.onScreeni] = self
+        w.Window.onScreeni = #w.Window.onScreen + 1
+        self.onScreeni = w.Window.onScreeni
+        w.Window.onScreen[w.Window.onScreeni] = self
 
     end,
 
@@ -63,33 +66,33 @@ Window = Class {
     onScreen = {}, onScreeni = 0,
 
     drawAll = function()
-        for i = 1, #Window.onScreen, 1 do
-            Window.onScreen[i]:draw()
+        for i = 1, #w.Window.onScreen, 1 do
+            w.Window.onScreen[i]:draw()
         end
     end,
 
     clearScreen = function()
-        for i = 1, #Window.onScreen, 1 do
-            Window.onScreen[i]:clear()
+        for i = 1, #w.Window.onScreen, 1 do
+            w.Window.onScreen[i]:clear()
         end
     end
 }
 
-function Window:clear()
-    Window.onScreen[self.onScreeni] = nil
+function w.Window:clear()
+    w.Window.onScreen[self.onScreeni] = nil
     if self.parent then
         self.parent = nil
     end
     self = nil
 end
 
-function Window:draw()
+function w.Window:draw()
     --draw spr bat
     love.graphics.draw(self.windowBat, self.pos:unpack())
 
 end
 
-Window_Title = Class {
+w.Window_Title = Class {
     init = function(self, title)
         --string
         self.title = love.graphics.newText(title_font, title)
@@ -102,7 +105,7 @@ Window_Title = Class {
     end,
 }
 
-function Window_Title:draw()
+function w.Window_Title:draw()
     --draw text (if any)
 
     local horizontal_text_offset
@@ -117,7 +120,7 @@ function Window_Title:draw()
     end
 end
 
-function Window_Title:clear()
+function w.Window_Title:clear()
     self.window:clear()
     self = nil
 end
