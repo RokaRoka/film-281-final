@@ -22,8 +22,13 @@ function area:enter(previous, args)
   hudebug.updateMsg(1, 1, "Test")
   hudebug.toggle()
 
+  --Create objects
+  --Create physics world
+  local p_world = gameObjects.PhysicsWorld(0, 0, false)
+
   --create player
   local player = gameObjects.Player(screen_data.positions.center:unpack())
+  player:initPhysics(p_world.world)
 end
 
 function area:update(dt)

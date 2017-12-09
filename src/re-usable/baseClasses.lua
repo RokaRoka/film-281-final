@@ -65,6 +65,9 @@ base.Object = Class{
 	end
 }
 
+function base.Object:updateDebug()
+	self.debug.text = "Object "..self.obj_i.." position is "..self.pos.x..", "..self.pos.y
+end
 --create empty update and draw function
 function base.Object:update(dt)
   --bark bark bark

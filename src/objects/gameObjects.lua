@@ -12,6 +12,17 @@ gObj.Debug = base.Debug
 gObj.Object = base.Object
 gObj.ObjectUI = base.ObjectUI
 
+gObj.PhysicsWorld = Class{__includes = base.Object,
+	init = function(self, xGrav, yGrav, isAbleToSleep)
+		base.Object.init(self, 0, 0, 0, 0)
+		self.world = love.physics.newWorld(xGrav, yGrav, isAbleToSleep)
+	end
+}
+
+function gObj.PhysicsWorld:update(dt)
+	self.world:update(dt)
+end
+
 gObj.Player = Class{__includes = base.Object,
 	init = function(self, x, y)
 		base.Object.init(self, x, y, 32, 32)
@@ -29,9 +40,19 @@ gObj.Player = Class{__includes = base.Object,
   maxVelocity = 10
 }
 
+function gObj.Player:initPhysics(world)
+	self.p_body = physics.PhysicsBody(world, self.pos.x, self.pos.y, "kinematic")
+	self.p_shape = physics.PhysicsShape(self.p_body, "circle", 32)
+end
+
 function gObj.Player:update(dt)
 	self:walk(dt)
 	--self:checkAction(dt)
+
+	if self.debug then
+		self:updateDebug()
+		self.debug:updateText()
+	end
 end
 
 function gObj.Player:walk(dt)
@@ -50,7 +71,7 @@ function gObj.Player:walk(dt)
 end
 
 function gObj.Player:move(dt, dx, dy)
-	local delta = vector(dx, dy)
+	local delta = vector.new(dx, dy)
 	local direction = vector.new(0, 0)
 	if delta.x - self.currentSpeed.x == math.abs(delta.x - self.currentSpeed.x) then
 		direction.x = 1
@@ -82,13 +103,17 @@ function gObj.Player:move(dt, dx, dy)
 		self.currentSpeed.y = delta.y
 	end
 
-	self.pos = self.pos + self.currentSpeed
-	--self.p_body.body:setLinearVelocity(, delta.y * (dt * 100))
-	--local newPx, newPy = self.p_body.body:getPosition()
-	--newPx = math.floor(newPx)
-	--newPy = math.floor(newPy)
+	if self.p_body == nil then
+		self.pos = self.pos + ((dt * 80) * self.currentSpeed)
+	else --fit dt in?
+		self.p_body.body:setLinearVelocity(self.currentSpeed:unpack())
+		local newPx, newPy = self.p_body.body:getPosition()
+		newPx = math.floor(newPx)
+		newPy = math.floor(newPy)
 
-	--self.pos = vector.new(newPx, newPy)
+		self.pos = vector.new(newPx, newPy)
+	end
+	--self.p_body.body:setLinearVelocity(, delta.y * (dt * 100))
 end
 
 function gObj.Player:checkAction(dt)

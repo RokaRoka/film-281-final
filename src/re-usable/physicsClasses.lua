@@ -1,37 +1,60 @@
-world = love.physics.newWorld(0, 0)
+local physics = {}
 
-PhysicsBody = Class {
+--physics classes give a parent object either a body or a shape and a fixture.
+--The body is stored in p_body
+--The shape is stored in p_shapes[]
+--The fixture is stored in p_fixtures[]
+
+physics.PhysicsBody = Class {
 	--parent containing, initial x pos, initial y pos, type of body (static, kinematic, dynamic), shape, width/radius, height
-	init = function(self, parent, init_x, init_y, bodytype, shape, wr, h)
+	init = function(self, world, init_x, init_y, bodytype)
 		self.body = love.physics.newBody(world, init_x, init_y, bodytype)
 		--additional options?
 	end
 }
 
-PhysicsShape = Class{
-	init = function(self, parent, shape, wr, h, off_x, off_y, isTrigger)
-		if shape == "circle" then
-			if off_x or off_y then self.shape = love.physics.newCircleShape(off_x, off_y, wr)
-			else self.shape = love.physics.newCircleShape(wr) end
-		elseif shape == "square" then
-			if off_x or off_y then  self.shape = love.physics.newRectangleShape(off_x, off_y, wr, wr)
-			else self.shape = love.physics.newRectangleShape(wr, wr) end
-		elseif shape == "rectangle" then
-			if off_x or off_y then  self.shape = love.physics.newRectangleShape(off_x, off_y, wr, h)
-			else self.shape = love.physics.newRectangleShape(wr, h) end
-		end
-		self.fixture = love.physics.newFixture(parent.p_body.body, self.shape)
-    if isTrigger then
-      self.fixture:setSensor(true)
-      --self.fixture:setCategory(layers.trigger)
-      --self.fixture:setMask(layers.boundry, layers.wall)
-    end
+physics.PhysicsShape = Class{
+	init = function(self, p_body, shape, wr, h, off_x, off_y, isTrigger)
+		self.shapes = {}
+		self.fixtures = {}
+
+		self:addShape(p_body.body, shape, wr, h, off_x, off_y, isTrigger)
 	end
 }
 
-PhysicsBoundry = Class{
+function physics.PhysicsShape:addShape(body, shape, wr, h, off_x, off_y, isTrigger)
+	if shape == "circle" then
+		if off_x or off_y then
+			newShape = love.physics.newCircleShape(off_x, off_y, wr)
+		else
+			newShape = love.physics.newCircleShape(wr) end
+	elseif shape == "square" then
+		if off_x or off_y then
+			newShape = love.physics.newRectangleShape(off_x, off_y, wr, wr)
+		else
+			newShape = love.physics.newRectangleShape(wr, wr) end
+	elseif shape == "rectangle" then
+		if off_x or off_y then
+			newShape = love.physics.newRectangleShape(off_x, off_y, wr, h)
+		else
+			newShape = love.physics.newRectangleShape(wr, h) end
+	end
+
+	newFixture = love.physics.newFixture(body, newShape)
+
+	if isTrigger then
+		self.fixture:setSensor(true)
+		--self.fixture:setCategory(layers.trigger)
+	end
+
+	self.shapes[#self.shapes + 1] = newShape
+	self.fixtures[#self.fixtures + 1] = newFixture
+end
+
+--do some work on the physics boundry to match the above classes (specifically PhysicsBody)
+physics.PhysicsBoundry = Class{
 	init = function(self, x, y, w, h)
-		self.body = love.physics.newBody(world, x, y, "kinematic")
+		self.body = love.physics.newBody(physics.world, x, y, "kinematic")
 		self.edges = {}
 
 		--norhtmost
@@ -50,3 +73,5 @@ PhysicsBoundry = Class{
 		self.fixtures[4] = love.physics.newFixture(self.body, self.edges[4])
 	end
 }
+
+return physics
