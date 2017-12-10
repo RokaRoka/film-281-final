@@ -1,16 +1,37 @@
---required Libraries
---hump
-local Class = require("libraries.hump.class")
-local Gamestate = require("libraries.hump.gamestate")
-
 --required classes
 --re-usable
-require("src.re-usable.baseClasses")
-require("src.re-usable.windowClasses")
+local base = require("src.re-usable.baseClasses")
+local window = require("src.re-usable.windowClasses")
 
---put this in a dialouge object class later
---Window.img.default = love.graphics.newImage("resources/images/Windows/window_default.png")
+local dObj = {}
 
+dObj.ObjectUI = base.ObjectUI
+
+dObj.InformationWindow = Class {__includes = base.ObjectUI,
+  init = function(self, x, y, text, w, h)
+    base.ObjectUI.init(self, x, y, w, h)
+    self.window = window.Window(x - w/2, y - h/2, w, h)
+  end
+}
+
+function dObj.InformationWindow:update(dt)
+
+end
+
+function dObj.InformationWindow:draw()
+  self.window:draw()
+  --draw text (if any)
+  local horizontal_text_offset
+  local vertical_text_offset
+
+  if self.text then
+      --determine spacing
+      horizontal_text_offset = 16 --+ 16 + 4
+      vertical_text_offset = self.textHeight/4
+      --print text
+      --love.graphics.draw(self.window.current_draw, self.window.pos.x + horizontal_text_offset, self.window.pos.y + 16 + (self.textHeight*(1-1)) + vertical_text_offset*1)
+  end
+end
 
 --[[WINDOW DIALOGUE CLASS
 Window_Dialogue = Class {
@@ -103,3 +124,5 @@ function Window_Dialogue:clear()
     player.busy = false
 end
 ]]
+
+return dObj
