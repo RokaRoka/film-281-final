@@ -1,7 +1,8 @@
 win = {}
 
+win.text_font = love.graphics.newFont(16)
+win.text_color = {0, 0, 0, 255}
 win.title_font = love.graphics.newFont(18)
-win.text_font = love.graphics.newFont(14)
 
 win.Window = Class {
     init = function(self, x, y, w, h, winImg)

@@ -11,6 +11,15 @@ dObj.InformationWindow = Class {__includes = base.ObjectUI,
   init = function(self, x, y, text, w, h)
     base.ObjectUI.init(self, x, y, w, h)
     self.window = window.Window(x - w/2, y - h/2, w, h)
+    self.text = text
+
+    self.info = love.graphics.newText(window.text_font)
+
+    --determine spacing
+    self.horizontal_text_offset = 16
+    self.vertical_text_offset = 16
+
+    self.info:setf({window.text_color, self.text}, w - (self.horizontal_text_offset*2), "left")
   end
 }
 
@@ -21,15 +30,12 @@ end
 function dObj.InformationWindow:draw()
   self.window:draw()
   --draw text (if any)
-  local horizontal_text_offset
-  local vertical_text_offset
 
-  if self.text then
-      --determine spacing
-      horizontal_text_offset = 16 --+ 16 + 4
-      vertical_text_offset = self.textHeight/4
+  if self.info then
       --print text
-      --love.graphics.draw(self.window.current_draw, self.window.pos.x + horizontal_text_offset, self.window.pos.y + 16 + (self.textHeight*(1-1)) + vertical_text_offset*1)
+      love.graphics.draw(self.info,
+        self.window.pos.x + self.horizontal_text_offset,
+        self.window.pos.y + self.vertical_text_offset)
   end
 end
 
