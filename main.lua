@@ -13,6 +13,7 @@ function love.load()
   Gamestates = {
       title = require("src.states.title"),
       area = require("src.states.area"),
+      talking = require("src.states.talking"),
       pause = require("src.states.pause")
   }
 

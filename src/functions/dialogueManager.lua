@@ -1,3 +1,5 @@
+dm = {}
+
 dialogueLines = {}
 
 local dialoguePath = 'resources/dialogues/'
@@ -24,3 +26,7 @@ end
 
 
 ReadFiles()
+
+dm.dialogueLines = dialogueLines
+
+return dm

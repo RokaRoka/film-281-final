@@ -53,9 +53,8 @@ dObj.DialogueWindow = Class {__includes = base.ObjectUI,
     self.window = window.Window(self.pos.x - self.w/2, self.pos.y - self.h/2, self.w, self.h)
 
     --strings
-
     self.dialogue = dialogue
-    self.title = love.graphics.newText(title_font, title)
+    --self.title = love.graphics.newText(window.title_font, title)
 
     --current dialogue line index
     self.index = 1
@@ -63,17 +62,18 @@ dObj.DialogueWindow = Class {__includes = base.ObjectUI,
     --text scrolling values
     self.count = 1
     self.current = string.char(self.dialogue[self.index]:byte())
-    self.current_draw = love.graphics.newText(window.text_font, self.current)
+    self.current_draw = love.graphics.newText(window.text_font)
+    self.readyForNext = false
 
     --determine spacing
     self.horizontal_text_offset = 16
     self.vertical_text_offset = 16
 
-    self.info:setf({window.text_color, self.current}, self.w - (self.horizontal_text_offset*2), "left")
+    self.current_draw:setf({window.text_color, self.current}, self.w - (self.horizontal_text_offset*2), "left")
   end,
 
   --Static variables
-  Speed = 10, DW_Current = nil
+  Speed = 30, DW_Current = nil
 
 }
 
@@ -83,29 +83,35 @@ end
 
 
 
-function Window_Dialogue:advanceText(dt)
-    if self.current ~= self.text[index] then
+function dObj.DialogueWindow:advanceText(dt)
+    if self.current ~= self.dialogue[self.index] then
+        readyForNext = false;
         self.count = self.count + (self.Speed * dt)
-        self.current = self.text[index]:sub(1, math.floor(self.count))
+        self.current = self.dialogue[self.index]:sub(1, math.floor(self.count))
         self.current_draw:setf({window.text_color, self.current}, self.w - (self.horizontal_text_offset*2), "left")
+    elseif not readyForNext then
+      readyForNext = true
     end
 end
 
 
 function dObj.DialogueWindow:NextDialogue()
-   if self.index < #self.text then
-     self.index = self.index + 1
-     self.count = 1
-     self.current = ""
-   elseif self.index == #self.text then
-       self:clear()
-   end
+  if readyForNext then
+    if self.index < #self.dialogue then
+      self.index = self.index + 1
+      self.count = 1
+      self.current = ""
+    elseif self.index == #self.dialogue then
+        Gamestate.pop()
+        self:clear()
+    end
+  end
 end
 
 function dObj.DialogueWindow:clear()
     self.window:clear()
-    dObj.DialogueWindow.DW_Current = nil
     self.current = ""
+    self = nil
 end
 
 function dObj.DialogueWindow:draw()

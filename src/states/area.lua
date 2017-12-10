@@ -1,10 +1,11 @@
 --required src
 --functions
 local textFunctions = require("src.functions.textFunctions")
+local dialogueManager = require("src.functions.dialogueManager")
 local mathFunctions = require("src.functions.mathFunctions")
 --objects
 local gameObjects = require("src.objects.gameObjects")
-local dialogueObjects = require("src.objects.dialogueObjects")
+
 
 --required resources
 --constants
@@ -34,26 +35,16 @@ function area:enter(previous, args)
 
   local firstNPC = gameObjects.NPC(64, screen_data.positions.center.y)
   firstNPC:initPhysics(p_world.world)
-  --create window
-  --[[local currentWindow = dialogueObjects.InformationWindow(
-    screen_data.positions.bot_center.x,
-    screen_data.positions.bot_left.y - screen_data.height/6,
-    "Here is some information",
-    screen_data.width/1.5,
-    screen_data.height/5)]]
-
 end
 
 function area:update(dt)
   --update stuff
   gameObjects.Object.updateAll(dt)
-  dialogueObjects.ObjectUI.updateAll(dt)
 end
 
 function area:draw()
   --draw stuff
   gameObjects.Object.drawAll()
-  dialogueObjects.ObjectUI.drawAll()
   hudebug.draw()
   love.graphics.setColor(255, 255, 255)
 end
@@ -61,6 +52,9 @@ end
 function area:keyreleased(key)
   if (key == "tab") then
     hudebug.nextPage()
+  end
+  if key == "z" then
+    Gamestate.push(Gamestates.talking, dialogueManager.dialogueLines[1])
   end
 end
 
