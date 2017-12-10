@@ -3,6 +3,10 @@
 local base = require("src.re-usable.baseClasses")
 local window = require("src.re-usable.windowClasses")
 
+--required resources
+--constants
+local screen_data = require("resources.constants.screen_data")
+
 local dObj = {}
 
 dObj.ObjectUI = base.ObjectUI
@@ -24,7 +28,7 @@ dObj.InformationWindow = Class {__includes = base.ObjectUI,
 }
 
 function dObj.InformationWindow:update(dt)
-
+  --if there is no mouse inside the information window, it disappears
 end
 
 function dObj.InformationWindow:draw()
@@ -34,6 +38,81 @@ function dObj.InformationWindow:draw()
   if self.info then
       --print text
       love.graphics.draw(self.info,
+        self.window.pos.x + self.horizontal_text_offset,
+        self.window.pos.y + self.vertical_text_offset)
+  end
+end
+
+dObj.DialogueWindow = Class {__includes = base.ObjectUI,
+  init = function(self, dialogue)
+    base.ObjectUI.init(self, screen_data.positions.bot_center.x,
+                             screen_data.positions.bot_center.y - screen_data.height/3,
+                             screen_data.width/1.5,
+                             screen_data.height/4)
+
+    self.window = window.Window(self.pos.x - self.w/2, self.pos.y - self.h/2, self.w, self.h)
+
+    --strings
+
+    self.dialogue = dialogue
+    self.title = love.graphics.newText(title_font, title)
+
+    --current dialogue line index
+    self.index = 1
+
+    --text scrolling values
+    self.count = 1
+    self.current = string.char(self.dialogue[self.index]:byte())
+    self.current_draw = love.graphics.newText(window.text_font, self.current)
+
+    --determine spacing
+    self.horizontal_text_offset = 16
+    self.vertical_text_offset = 16
+
+    self.info:setf({window.text_color, self.current}, self.w - (self.horizontal_text_offset*2), "left")
+  end,
+
+  --Static variables
+  Speed = 10, DW_Current = nil
+
+}
+
+function dObj.DialogueWindow:update(dt)
+  self:advanceText(dt)
+end
+
+
+
+function Window_Dialogue:advanceText(dt)
+    if self.current ~= self.text[index] then
+        self.count = self.count + (self.Speed * dt)
+        self.current = self.text[index]:sub(1, math.floor(self.count))
+        self.current_draw:setf({window.text_color, self.current}, self.w - (self.horizontal_text_offset*2), "left")
+    end
+end
+
+
+function dObj.DialogueWindow:NextDialogue()
+   if self.index < #self.text then
+     self.index = self.index + 1
+     self.count = 1
+     self.current = ""
+   elseif self.index == #self.text then
+       self:clear()
+   end
+end
+
+function dObj.DialogueWindow:clear()
+    self.window:clear()
+    dObj.DialogueWindow.DW_Current = nil
+    self.current = ""
+end
+
+function dObj.DialogueWindow:draw()
+  self.window:draw()
+  if self.current_draw then
+      --print text
+      love.graphics.draw(self.current_draw,
         self.window.pos.x + self.horizontal_text_offset,
         self.window.pos.y + self.vertical_text_offset)
   end
