@@ -1,25 +1,26 @@
-title_font = love.graphics.newFont(18)
-text_font = love.graphics.newFont(14)
-Window = Class {
-    init = function(self, x, y, w, h, winImg, parent)
+win = {}
+
+win.text_font = love.graphics.newFont(16)
+win.text_color = {0, 0, 0, 255}
+win.title_font = love.graphics.newFont(18)
+
+win.Window = Class {
+    init = function(self, x, y, w, h, winImg)
         --appearence
         self.pos = vector.new(x or 0, y or 0)
         self.w = w or screen.w; self.h = h or screen.h
 
-        self.winImg = winImg or Window.img.default
+        self.winImg = winImg or love.graphics.newImage("resources/images/Windows/window_default.png")
 
         --spritebatch!
-        self.windowBat = Window.windowSprBat(self.w, self.h, self.winImg)
-        --self.arrow = love.graphics.newQuad(64+16, 16, 16, 16, raw_imgs.window.default:getDimensions())
+        self.windowBat = win.Window.windowSprBat(self.w, self.h, self.winImg)
 
         --Add window to onScreen array
-        Window.onScreeni = #Window.onScreen + 1
-        self.onScreeni = Window.onScreeni
-        Window.onScreen[Window.onScreeni] = self
+        win.Window.onScreeni = #win.Window.onScreen + 1
+        self.onScreeni = win.Window.onScreeni
+        win.Window.onScreen[win.Window.onScreeni] = self
 
     end,
-
-    img = {},
 
     windowSprBat = function(w, h, img_ref)
         --Keep w and h in multiples of 16!!
@@ -63,33 +64,29 @@ Window = Class {
     onScreen = {}, onScreeni = 0,
 
     drawAll = function()
-        for i = 1, #Window.onScreen, 1 do
-            Window.onScreen[i]:draw()
+        for i = 1, #win.Window.onScreen, 1 do
+            win.Window.onScreen[i]:draw()
         end
     end,
 
     clearScreen = function()
-        for i = 1, #Window.onScreen, 1 do
-            Window.onScreen[i]:clear()
+        for i = 1, #win.Window.onScreen, 1 do
+            win.Window.onScreen[i]:clear()
         end
     end
 }
 
-function Window:clear()
-    Window.onScreen[self.onScreeni] = nil
-    if self.parent then
-        self.parent = nil
-    end
+function win.Window:clear()
+    win.Window.onScreen[self.onScreeni] = nil
     self = nil
 end
 
-function Window:draw()
+function win.Window:draw()
     --draw spr bat
     love.graphics.draw(self.windowBat, self.pos:unpack())
-
 end
 
-Window_Title = Class {
+win.Window_Title = Class {
     init = function(self, title)
         --string
         self.title = love.graphics.newText(title_font, title)
@@ -97,12 +94,12 @@ Window_Title = Class {
         --string info
         self.textHeight = love.graphics.getFont():getHeight()
 
-        --Window creation (x, y, w, h, winImg, parent)
-        self.window = Window((800/2) - (128/2), 0, 128, 48, nil, self)
+        --Window creation (x, y, w, h, winImg)
+        self.window = win.Window((800/2) - (128/2), 0, 128, 48, nil)
     end,
 }
 
-function Window_Title:draw()
+function win.Window_Title:draw()
     --draw text (if any)
 
     local horizontal_text_offset
@@ -117,7 +114,9 @@ function Window_Title:draw()
     end
 end
 
-function Window_Title:clear()
+function win.Window_Title:clear()
     self.window:clear()
     self = nil
 end
+
+return win

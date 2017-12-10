@@ -10,7 +10,6 @@ local gObj = {}
 --ref to base classes
 gObj.Debug = base.Debug
 gObj.Object = base.Object
-gObj.ObjectUI = base.ObjectUI
 
 gObj.PhysicsWorld = Class{__includes = base.Object,
 	init = function(self, xGrav, yGrav, isAbleToSleep)

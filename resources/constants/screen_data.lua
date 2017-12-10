@@ -6,6 +6,9 @@ local width, height = love.graphics.getDimensions()
 
 local s_d = {}
 
+s_d.width = width
+s_d.height = height
+
 s_d.positions = {}
 s_d.positions.top_left = vector.new(0, 0)
 s_d.positions.top_center = vector.new(width/2, 0)
