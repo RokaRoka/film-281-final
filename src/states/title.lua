@@ -1,7 +1,7 @@
 --required src
 --functions
 local textFunctions = require("src.functions.textFunctions")
-
+local dialogueManager = require("src.functions.dialogueManager")
 --required resources
 --constants
 local screen_data = require("resources.constants.screen_data")
@@ -31,6 +31,10 @@ function title:enter(previous, args)
   instructionsPosition = screen_data.positions.center:clone()
   instructionsWidth = instructionsText:getWidth()
   instructionsHeight = instructionsText:getHeight()
+
+  dialogueDebugText = love.graphics.newText(instructionsFont, dialogueLines[1][1])
+  dialogueDebugWidth = dialogueDebugText:getWidth()
+  dialogueDebugHeight = dialogueDebugText:getHeight()
 end
 
 function title:update(dt)
@@ -39,12 +43,16 @@ end
 
 function title:draw()
   --draw stuff
+  textFunctions.drawTextOnOffset(dialogueDebugText, screen_data.positions.bot_center, vector.new(dialogueDebugWidth/-2, dialogueDebugHeight * - 4))
   --temp title
   textFunctions.drawTextOnOffset(titleText, titlePosition, vector.new(titleWidth/-2, titleHeight/-2))
   textFunctions.drawTextOnOffset(instructionsText, instructionsPosition, vector.new(instructionsWidth/-2, instructionsHeight/-2))
 end
 
 function title:keyreleased(key)
+  if (key == "escape") then
+    love.event.quit()
+  end
   if (key == "space") then
     --load level
     Gamestate.switch(Gamestates.area)
