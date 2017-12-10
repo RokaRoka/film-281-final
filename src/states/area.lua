@@ -1,6 +1,7 @@
 --required src
 --functions
 local textFunctions = require("src.functions.textFunctions")
+local mathFunctions = require("src.functions.mathFunctions")
 --objects
 local gameObjects = require("src.objects.gameObjects")
 local dialogueObjects = require("src.objects.dialogueObjects")
@@ -31,6 +32,8 @@ function area:enter(previous, args)
   local player = gameObjects.Player(screen_data.positions.center:unpack())
   player:initPhysics(p_world.world)
 
+  local firstNPC = gameObjects.NPC(64, screen_data.positions.center.y)
+  firstNPC:initPhysics(p_world.world)
   --create window
   --[[local currentWindow = dialogueObjects.InformationWindow(
     screen_data.positions.bot_center.x,
@@ -38,7 +41,7 @@ function area:enter(previous, args)
     "Here is some information",
     screen_data.width/1.5,
     screen_data.height/5)]]
-    
+
 end
 
 function area:update(dt)

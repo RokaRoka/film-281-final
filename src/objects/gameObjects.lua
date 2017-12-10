@@ -65,13 +65,14 @@ gObj.Player = Class{__includes = base.Object,
 	end,
 
 	--player default values
-  acceleration = 4,
-  maxVelocity = 10
+  acceleration = 0.8,
+  maxVelocity = 100
 }
 
 function gObj.Player:initPhysics(world)
-	self.p_body = physics.PhysicsBody(world, self.pos.x, self.pos.y, "kinematic")
-	self.p_shape = physics.PhysicsShape(self.p_body, "circle", 32)
+	self.p_body = physics.PhysicsBody(self, world, self.pos.x, self.pos.y, "dynamic")
+	self.p_shape = physics.PhysicsShape(self, self.p_body, "circle", self.w/2)
+	self.p_shape.fixtures[1]:setUserData(self)
 end
 
 function gObj.Player:update(dt)
@@ -103,48 +104,16 @@ end
 
 function gObj.Player:move(dt, dx, dy)
 	local delta = vector.new(dx, dy)
-	local direction = vector.new(0, 0)
-	if delta.x - self.currentSpeed.x == math.abs(delta.x - self.currentSpeed.x) then
-		direction.x = 1
-	else
-		direction.x = -1
-	end
 
-	if delta.y - self.currentSpeed.y == math.abs(delta.y - self.currentSpeed.y) then
-		direction.y = 1
-	else
-		direction.y = -1
-	end
-
-  self.currentSpeed = self.acceleration *	direction
-
-	if delta.x - self.currentSpeed.x == math.abs(delta.x - self.currentSpeed.x) then
-		if direction.x == -1 then
-			self.currentSpeed.x = delta.x
-		end
-	elseif direction.x == 1 then
-		self.currentSpeed.x = delta.x
-	end
-
-	if delta.y - self.currentSpeed.y == math.abs(delta.y - self.currentSpeed.y) then
-		if direction.y == -1 then
-			self.currentSpeed.x = delta.y
-		end
-	elseif direction.y == 1 then
-		self.currentSpeed.y = delta.y
-	end
+  self.currentSpeed = lerp(self.currentSpeed, delta, self.acceleration)
 
 	if self.p_body == nil then
-		self.pos = self.pos + ((dt * 80) * self.currentSpeed)
-	else --fit dt in?
-		self.p_body.body:setLinearVelocity(self.currentSpeed:unpack())
-		local newPx, newPy = self.p_body.body:getPosition()
-		newPx = math.floor(newPx)
-		newPy = math.floor(newPy)
-
-		self.pos = vector.new(newPx, newPy)
+		self.pos = self.pos + ((dt * 10) * self.currentSpeed)
+	else
+		newVelocity = vector.new(math.clamp(self.maxVelocity * -1, self.currentSpeed.x, self.maxVelocity),
+		 												 math.clamp(self.maxVelocity * -1, self.currentSpeed.y, self.maxVelocity))
+		self.p_body.body:setLinearVelocity(newVelocity:unpack())
 	end
-	--self.p_body.body:setLinearVelocity(, delta.y * (dt * 100))
 end
 
 function gObj.Player:checkAction(dt)
@@ -162,15 +131,60 @@ end
 
 function gObj.Player:draw()
 	--draw player img, if applicable
+	if self.p_body then
+		local newPx, newPy = self.p_body.body:getPosition()
+		newPx = math.floor(newPx)
+		newPy = math.floor(newPy)
+		self.pos = vector.new(newPx, newPy)
+	end
+
+	if self.image then
+		love.graphics.draw(self.image, self.pos.x + self.imageOffset.x, self.pos.y + self.imageOffset.y)
+	end
+end
+
+gObj.NPC = Class{__includes = base.Object,
+	init = function(self, x, y)
+		base.Object.init(self, x, y, 32, 32)
+
+		self.image = love.graphics.newImage("resources/images/Characters/innuk_v1.png")
+		self.imageOffset = vector.new(self.image:getDimensions())
+		self.imageOffset = -0.5 * self.imageOffset
+		self.imageOffset.y = self.imageOffset.y - 16
+
+	end
+}
+
+function gObj.NPC:initPhysics(world)
+	self.p_body = physics.PhysicsBody(self, world, self.pos.x, self.pos.y, "static")
+	self.p_shape = physics.PhysicsShape(self, self.p_body, "circle", self.w/2)
+	self.p_shape.fixtures[1]:setUserData(self)
+end
+
+function gObj.NPC:update(dt)
+	if self.debug then
+		self:updateDebug()
+		self.debug:updateText()
+	end
+end
+
+--PLAYER PHYSICS CALLBACKS
+
+function gObj.NPC:beginContact(fixtureA, fixtureB, contact)
+	--anything
+end
+
+function gObj.NPC:draw()
+	--draw player img, if applicable
 	if self.image then
 		love.graphics.draw(self.image, self.pos.x + self.imageOffset.x, self.pos.y + self.imageOffset.y)
 	end
 end
 
 gObj.PhysicsBoundryObject = Class {__includes = base.Object,
-	init = function(self, x, y, w, h)
+	init = function(self, parent, world,  x, y, w, h)
 		base.Object.init(x, y, w, h)
-		p_boundry = physics.PhysicsBoundry(x, y, w, h)
+		p_boundry = physics.PhysicsBoundry(parent, world, x, y, w, h)
 	end
 }
 

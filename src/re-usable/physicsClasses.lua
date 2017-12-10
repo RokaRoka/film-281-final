@@ -7,14 +7,14 @@ local physics = {}
 
 physics.PhysicsBody = Class {
 	--parent containing, initial x pos, initial y pos, type of body (static, kinematic, dynamic), shape, width/radius, height
-	init = function(self, world, init_x, init_y, bodytype)
+	init = function(self, parent, world, init_x, init_y, bodytype)
 		self.body = love.physics.newBody(world, init_x, init_y, bodytype)
 		--additional options?
 	end
 }
 
 physics.PhysicsShape = Class{
-	init = function(self, p_body, shape, wr, h, off_x, off_y, isTrigger)
+	init = function(self, parent, p_body, shape, wr, h, off_x, off_y, isTrigger)
 		self.shapes = {}
 		self.fixtures = {}
 
@@ -53,8 +53,8 @@ end
 
 --do some work on the physics boundry to match the above classes (specifically PhysicsBody)
 physics.PhysicsBoundry = Class{
-	init = function(self, x, y, w, h)
-		self.body = love.physics.newBody(physics.world, x, y, "kinematic")
+	init = function(self, parent, world, x, y, w, h)
+		self.body = love.physics.newBody(world, x, y, "kinematic")
 		self.edges = {}
 
 		--norhtmost
