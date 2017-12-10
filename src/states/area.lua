@@ -32,13 +32,13 @@ function area:enter(previous, args)
   player:initPhysics(p_world.world)
 
   --create window
-  local currentWindow = dialogueObjects.InformationWindow(
+  --[[local currentWindow = dialogueObjects.InformationWindow(
     screen_data.positions.bot_center.x,
     screen_data.positions.bot_left.y - screen_data.height/6,
     "Here is some information",
     screen_data.width/1.5,
-    screen_data.height/5)
-
+    screen_data.height/5)]]
+    
 end
 
 function area:update(dt)

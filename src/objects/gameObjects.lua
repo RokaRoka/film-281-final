@@ -15,8 +15,38 @@ gObj.PhysicsWorld = Class{__includes = base.Object,
 	init = function(self, xGrav, yGrav, isAbleToSleep)
 		base.Object.init(self, 0, 0, 0, 0)
 		self.world = love.physics.newWorld(xGrav, yGrav, isAbleToSleep)
-	end
+
+		self.world:setCallbacks(self.beginContact, self.endContact)
+	end,
+
+	onBeginContact = {}, onEndContact = {}
 }
+
+function gObj.PhysicsWorld:addBeginContactFunction(beginFunction)
+	onBeginContact[#onBeginContact + 1] = beginFunction
+end
+
+function gObj.PhysicsWorld:addEndContactFunction(endFunction)
+	onEndContact[#onEndContact + 1] = endFunction
+end
+
+function gObj.PhysicsWorld:beginContact(fixtureA, fixtureB, contact)
+	--callback stuff here!
+	if #gObj.PhysicsWorld.onBeginContact > 0 then
+		for i, v in ipairs(gObj.PhysicsWorld.onBeginContact) do
+			gObj.PhysicsWorld.onBeginContact[i](fixtureA, fixtureB, contact)
+		end
+	end
+end
+
+function gObj.PhysicsWorld:endContact(fixtureA, fixtureB, contact)
+	--callback stuff here!
+	if #gObj.PhysicsWorld.onEndContact > 0 then
+		for i, v in ipairs(gObj.PhysicsWorld.onEndContact) do
+			gObj.PhysicsWorld.onEndContact[i](fixtureA, fixtureB, contact)
+		end
+	end
+end
 
 function gObj.PhysicsWorld:update(dt)
 	self.world:update(dt)
@@ -53,6 +83,8 @@ function gObj.Player:update(dt)
 		self.debug:updateText()
 	end
 end
+
+--PLAYER MECHANICS
 
 function gObj.Player:walk(dt)
 	local dx, dy = 0, 0
@@ -122,11 +154,24 @@ function gObj.Player:checkAction(dt)
 	--end
 end
 
+--PLAYER PHYSICS CALLBACKS
+
+function gObj.Player:beginContact(fixtureA, fixtureB, contact)
+	--anything
+end
+
 function gObj.Player:draw()
 	--draw player img, if applicable
 	if self.image then
 		love.graphics.draw(self.image, self.pos.x + self.imageOffset.x, self.pos.y + self.imageOffset.y)
 	end
 end
+
+gObj.PhysicsBoundryObject = Class {__includes = base.Object,
+	init = function(self, x, y, w, h)
+		base.Object.init(x, y, w, h)
+		p_boundry = physics.PhysicsBoundry(x, y, w, h)
+	end
+}
 
 return gObj
