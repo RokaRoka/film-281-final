@@ -6,7 +6,6 @@ local mathFunctions = require("src.functions.mathFunctions")
 --objects
 local gameObjects = require("src.objects.gameObjects")
 
-
 --required resources
 --constants
 local screen_data = require("resources.constants.screen_data")

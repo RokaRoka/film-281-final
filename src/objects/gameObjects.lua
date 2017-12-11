@@ -149,7 +149,7 @@ gObj.NPC = Class{__includes = base.Object,
 		base.Object.init(self, x, y, 32, 32)
 
 		self.name = 'NPC'
-		self.dialogue = dialogue or {"I'm the default NPC dialogue!",
+		self.dialogue = dialogue or {"I'm the default inuit NPC dialogue!",
 																 "If you see this, something may be wrong. OR right, if you are Sam and debugging this."}
 
 		self.canTalkImage = love.graphics.newImage("resources/images/Characters/notice.png")

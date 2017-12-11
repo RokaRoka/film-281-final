@@ -3,7 +3,12 @@
 local base = require("src.re-usable.baseClasses")
 local window = require("src.re-usable.windowClasses")
 
+--required src
+--functions
+local inuinnaqtunParser = require("src.functions.inuinnaqtunParser")
+
 --required resources
+local inuinnaqtun_index = require("resources.inuinnaqtun_index")
 --constants
 local screen_data = require("resources.constants.screen_data")
 
@@ -90,6 +95,9 @@ function dObj.DialogueWindow:advanceText(dt)
         self.current = self.dialogue[self.index]:sub(1, math.floor(self.count))
         self.current_draw:setf({window.text_color, self.current}, self.w - (self.horizontal_text_offset*2), "left")
     elseif not readyForNext then
+      local newColorTextTable = {}
+      newColorTextTable = inuinnaqtunParser(self.current, inuinnaqtun_index, window.text_color, {140, 130, 140, 255})
+      self.current_draw:setf(newColorTextTable, self.w - (self.horizontal_text_offset*2), "left")
       readyForNext = true
     end
 end

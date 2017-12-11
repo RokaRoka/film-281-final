@@ -1,2 +1,2 @@
 "I am a line! Fear me!"
-"I am the second line. OooOooOoOOo~~~."
+"I am the second line. OooOooOoOOo. Example!"
