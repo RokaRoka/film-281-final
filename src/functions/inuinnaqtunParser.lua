@@ -4,6 +4,8 @@ local parser = function(line, inuinnaqtun, textcolor1, textcolor2)
   local coloredString = {}
   local count = 1
   local stringChunks = {}
+  local wordCount = 1
+  local wordInfo = {}
 
   stringChunks[count] = line
   coloredString[count2] = textcolor1
@@ -28,8 +30,12 @@ local parser = function(line, inuinnaqtun, textcolor1, textcolor2)
       coloredString[count2] = textcolor2
       coloredString[count2+1] = m
       hudebug.updateMsg(1, count+3, "And next part into "..stringChunks[count])
-
-      --spawn info window indicator
+      --spawn word info
+      wordInfo[wordCount] = {}
+      wordInfo[wordCount].charIndex = start_i
+      wordInfo[wordCount].word = m
+      wordInfo[wordCount].info = inuinnaqtun[m]
+      wordCount = wordCount + 1
 
       count = count + 2
       count2 = count2 + 2
@@ -40,7 +46,7 @@ local parser = function(line, inuinnaqtun, textcolor1, textcolor2)
     end
   end
 
-  return coloredString
+  return coloredString, wordInfo
 end
 
 return parser

@@ -1,6 +1,7 @@
 --required classes
 --re-usable
 local base = require("src.re-usable.baseClasses")
+local physics = require("src.re-usable.physicsClasses")
 local window = require("src.re-usable.windowClasses")
 
 --required src
@@ -29,6 +30,7 @@ dObj.InformationWindow = Class {__includes = base.ObjectUI,
     self.vertical_text_offset = 16
 
     self.info:setf({window.text_color, self.text}, w - (self.horizontal_text_offset*2), "left")
+    self.drawable = true
   end
 }
 
@@ -37,14 +39,40 @@ function dObj.InformationWindow:update(dt)
 end
 
 function dObj.InformationWindow:draw()
-  self.window:draw()
-  --draw text (if any)
+  if self.drawable then
+    self.window:draw()
+    --draw text (if any)
 
-  if self.info then
-      --print text
+    if self.info then
+        --print text
       love.graphics.draw(self.info,
         self.window.pos.x + self.horizontal_text_offset,
         self.window.pos.y + self.vertical_text_offset)
+    end
+  end
+end
+
+dObj.WordInfoTrigger = Class{__includes = base.ObjectUI,
+  init = function(self, x, y, word, info)
+    local width = love.graphics.getFont():getWidth(word)
+    local height = love.graphics.getFont():getHeight()
+    base.ObjectUI.init(self, x, y, width, height)
+
+    self.infoWindow = dObj.InformationWindow(screen_data.positions.right.x - 128/2, screen_data.positions.top_right.y + 192/2, info, 128, 192)
+    self.infoWindow.drawable = false
+  end
+}
+
+function dObj.WordInfoTrigger:update(dt)
+  mousePos = vector.new(love.mouse.getPosition())
+  if mousePos.x > self.pos.x - self.w/2 and mousePos.x < self.pos.x + self.w/2 then
+    if mousePos.y > self.pos.y - self.h/2 and mousePos.y < self.pos.y + self.h/2 then
+      self.infoWindow.drawable = true
+    else
+      self.infoWindow.drawable = false
+    end
+  else
+    self.infoWindow.drawable = false
   end
 end
 
@@ -74,6 +102,9 @@ dObj.DialogueWindow = Class {__includes = base.ObjectUI,
     self.horizontal_text_offset = 16
     self.vertical_text_offset = 16
 
+    --Important words
+    self.highlightWords = {}
+
     self.current_draw:setf({window.text_color, self.current}, self.w - (self.horizontal_text_offset*2), "left")
   end,
 
@@ -95,9 +126,15 @@ function dObj.DialogueWindow:advanceText(dt)
         self.current = self.dialogue[self.index]:sub(1, math.floor(self.count))
         self.current_draw:setf({window.text_color, self.current}, self.w - (self.horizontal_text_offset*2), "left")
     elseif not readyForNext then
-      local newColorTextTable = {}
-      newColorTextTable = inuinnaqtunParser(self.current, inuinnaqtun_index, window.text_color, {140, 130, 140, 255})
+      local newColorTextTable = {} ; local wordInfo = {}
+      newColorTextTable, wordInfo = inuinnaqtunParser(self.current, inuinnaqtun_index, window.text_color, {80, 80, 220, 255})
       self.current_draw:setf(newColorTextTable, self.w - (self.horizontal_text_offset*2), "left")
+      for i,v in ipairs(wordInfo) do
+        local xPos, yPos
+        xPos = self.window.pos.x + self.horizontal_text_offset + math.fmod(v.charIndex * window.text_font:getWidth("a"), self.current_draw:getWidth()) - window.text_font:getWidth(v.word:len()) * 2
+        yPos = self.window.pos.y + self.vertical_text_offset + (window.text_font:getHeight()/2 * math.ceil(v.charIndex * window.text_font:getWidth("a")/self.current_draw:getWidth()))
+        self.highlightWords[i] = dObj.WordInfoTrigger(xPos, yPos, v.word, v.info)
+      end
       readyForNext = true
     end
 end
