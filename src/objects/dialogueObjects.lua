@@ -38,6 +38,11 @@ function dObj.InformationWindow:update(dt)
   --if there is no mouse inside the information window, it disappears
 end
 
+function dObj.InformationWindow:clear()
+  self.window:clear()
+  base.ObjectUI.clearObject(self.obj_i)
+end
+
 function dObj.InformationWindow:draw()
   if self.drawable then
     self.window:draw()
@@ -74,6 +79,11 @@ function dObj.WordInfoTrigger:update(dt)
   else
     self.infoWindow.drawable = false
   end
+end
+
+function dObj.WordInfoTrigger:clear()
+  self.infoWindow:clear()
+  base.ObjectUI.clearObject(self.obj_i)
 end
 
 dObj.DialogueWindow = Class {__includes = base.ObjectUI,

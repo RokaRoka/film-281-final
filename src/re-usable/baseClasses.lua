@@ -101,6 +101,10 @@ base.ObjectUI = Class{
 	end,
 	all = {}, obj_i = 0,
 
+	clearObject = function(index)
+		base.ObjectUI.all[index] = nil
+	end,
+
 	updateAll = function(dt)
 		for i = 1, base.ObjectUI.obj_i do
 			local current = base.ObjectUI.all[i]
