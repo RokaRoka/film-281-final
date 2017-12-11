@@ -1,7 +1,6 @@
 --required src
 --functions
 local textFunctions = require("src.functions.textFunctions")
-local dialogueManager = require("src.functions.dialogueManager")
 --required resources
 --constants
 local screen_data = require("resources.constants.screen_data")

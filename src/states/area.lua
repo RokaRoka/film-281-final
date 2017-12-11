@@ -31,10 +31,12 @@ function area:enter(previous, args)
 
   --create player
   local player = gameObjects.Player(screen_data.positions.center:unpack())
+  player:registerInputs()
   player:initPhysics(p_world.world)
 
   local firstNPC = gameObjects.NPC(64, screen_data.positions.center.y)
   firstNPC:initPhysics(p_world.world)
+
 end
 
 function area:update(dt)
@@ -50,11 +52,11 @@ function area:draw()
 end
 
 function area:keyreleased(key)
-  if (key == "tab") then
+  if key == "tab" then
     hudebug.nextPage()
   end
   if key == "z" then
-    Gamestate.push(Gamestates.talking, dialogueManager.dialogueLines[1])
+    Signal.emit('player-check')
   end
 end
 

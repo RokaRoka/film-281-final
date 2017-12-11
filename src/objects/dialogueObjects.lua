@@ -46,8 +46,8 @@ end
 dObj.DialogueWindow = Class {__includes = base.ObjectUI,
   init = function(self, dialogue)
     base.ObjectUI.init(self, screen_data.positions.bot_center.x,
-                             screen_data.positions.bot_center.y - screen_data.height/3,
-                             screen_data.width/1.5,
+                             screen_data.positions.bot_center.y - screen_data.height/6,
+                             screen_data.width/1.25,
                              screen_data.height/4)
 
     self.window = window.Window(self.pos.x - self.w/2, self.pos.y - self.h/2, self.w, self.h)
@@ -73,7 +73,7 @@ dObj.DialogueWindow = Class {__includes = base.ObjectUI,
   end,
 
   --Static variables
-  Speed = 30, DW_Current = nil
+  Speed = 40, DW_Current = nil
 
 }
 

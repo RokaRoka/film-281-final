@@ -32,7 +32,7 @@ function talking:leave()
 end
 
 function talking:update(dt)
-  self.previousState:update(dt)
+  --self.previousState:update(dt)
   dialogueObjects.ObjectUI.updateAll(dt)
 end
 

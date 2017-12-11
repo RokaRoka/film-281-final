@@ -56,8 +56,10 @@ base.Object = Class{
 			if current.debug.drawable then
 				love.graphics.setColor(current.debug.color)
 				love.graphics.rectangle("line", current.pos.x - (current.w/2), current.pos.y - (current.h/2), current.w, current.h)
-				if current.p_trigger then
-					love.graphics.circle("line", current.pos.x, current.pos.y, current.p_trigger.shape:getRadius())
+				if current.p_shape then
+					if current.p_shape.shapes[1] then
+						love.graphics.circle("line", current.pos.x, current.pos.y, current.p_shape.shapes[1]:getRadius())
+					end
 				end
 				love.graphics.setColor(255, 255, 255)
 			end
