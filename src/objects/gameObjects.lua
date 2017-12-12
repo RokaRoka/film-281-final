@@ -11,6 +11,19 @@ local gObj = {}
 gObj.Debug = base.Debug
 gObj.Object = base.Object
 
+gObj.BackgroundImage = Class{__includes = base.Object,
+	init = function(self, filepath)
+		base.Object.init(self, 0, 0, 0, 0)
+		self.filepath = filepath
+		self.img = love.graphics.newImage(filepath)
+	end
+}
+
+function gObj.BackgroundImage:specialDraw()
+	if self.drawable then
+		love.graphics.draw(self.img, self.pos.x, self.pos.y)
+	end
+end
 gObj.PhysicsWorld = Class{__includes = base.Object,
 	init = function(self, xGrav, yGrav, isAbleToSleep)
 		base.Object.init(self, 0, 0, 0, 0)

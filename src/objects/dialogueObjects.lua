@@ -63,8 +63,10 @@ dObj.WordInfoTrigger = Class{__includes = base.ObjectUI,
     local height = love.graphics.getFont():getHeight()
     base.ObjectUI.init(self, x, y, width, height)
 
-    self.infoWindow = dObj.InformationWindow(screen_data.positions.right.x - 128/2, screen_data.positions.top_right.y + 192/2, info, 128, 192)
+    self.infoWindow = dObj.InformationWindow(screen_data.positions.right.x - 160/2, screen_data.positions.top_right.y + 192/2, info, 160, 192)
     self.infoWindow.drawable = false
+
+    self.debug.drawable = true
   end
 }
 
@@ -141,7 +143,7 @@ function dObj.DialogueWindow:advanceText(dt)
       self.current_draw:setf(newColorTextTable, self.w - (self.horizontal_text_offset*2), "left")
       for i,v in ipairs(wordInfo) do
         local xPos, yPos
-        xPos = self.window.pos.x + self.horizontal_text_offset + math.fmod(v.charIndex * window.text_font:getWidth("a"), self.current_draw:getWidth()) - window.text_font:getWidth(v.word:len()) * 2
+        xPos = self.window.pos.x + self.horizontal_text_offset + math.fmod(v.charIndex * window.text_font:getWidth("a"), self.current_draw:getWidth()) - window.text_font:getWidth(v.word:len())
         yPos = self.window.pos.y + self.vertical_text_offset + (window.text_font:getHeight()/2 * math.ceil(v.charIndex * window.text_font:getWidth("a")/self.current_draw:getWidth()))
         self.highlightWords[i] = dObj.WordInfoTrigger(xPos, yPos, v.word, v.info)
       end

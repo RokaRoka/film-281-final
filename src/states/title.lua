@@ -42,7 +42,7 @@ end
 
 function title:draw()
   --draw stuff
-  textFunctions.drawTextOnOffset(dialogueDebugText, screen_data.positions.bot_center, vector.new(dialogueDebugWidth/-2, dialogueDebugHeight * - 4))
+  --textFunctions.drawTextOnOffset(dialogueDebugText, screen_data.positions.bot_center, vector.new(dialogueDebugWidth/-2, dialogueDebugHeight * - 4))
   --temp title
   textFunctions.drawTextOnOffset(titleText, titlePosition, vector.new(titleWidth/-2, titleHeight/-2))
   textFunctions.drawTextOnOffset(instructionsText, instructionsPosition, vector.new(instructionsWidth/-2, instructionsHeight/-2))

@@ -6,7 +6,7 @@ base.Debug = Class{
 		self.index = index or 1
 		self.page = page or 2
 
-		self.drawable = true
+		self.drawable = false
 
 		self:updateText()
 	end,

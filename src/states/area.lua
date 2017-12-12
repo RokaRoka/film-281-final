@@ -22,7 +22,7 @@ function area:enter(previous, args)
   hudebug.pageName(1, "Master Debug")
   hudebug.pageName(2, "Objects")
   hudebug.updateMsg(1, 1, "Test")
-  hudebug.toggle()
+  --hudebug.toggle()
 
   --Create objects
   --Create physics world
@@ -33,8 +33,12 @@ function area:enter(previous, args)
   player:registerInputs()
   player:initPhysics(p_world.world)
 
-  local firstNPC = gameObjects.NPC(64, screen_data.positions.center.y)
+  local firstNPC = gameObjects.NPC(64, screen_data.positions.center.y, dialogueManager.dialogueLines[1])
   firstNPC:initPhysics(p_world.world)
+
+  bgImg = gameObjects.BackgroundImage("resources/images/Environment/tempBG.png")
+  --local secondNPC = gameObjects.NPC(screen_data.width - 64, screen_data.positions.center.y, dialogueManager.dialogueLines[2])
+  --secondNPC:initPhysics(p_world.world)
 
 end
 
@@ -45,6 +49,7 @@ end
 
 function area:draw()
   --draw stuff
+  bgImg:specialDraw()
   gameObjects.Object.drawAll()
   hudebug.draw()
   love.graphics.setColor(255, 255, 255)

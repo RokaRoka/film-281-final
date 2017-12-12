@@ -12,17 +12,18 @@ local parser = function(line, inuinnaqtun, textcolor1, textcolor2)
   coloredString[count2+1] = stringChunks[count]
 
   for _, word in ipairs(inuinnaqtun.keys) do
-    for m in string.gmatch(line, word) do
+    --for m in string.gmatch(line, word) do
+    for m in string.gmatch(line, '[%s]('..word..')[%!%?%.%,%s]') do
       --find char positions in string
       local start_i, end_i = string.find(line, m)
-      local current_start_i = string.find(line, stringChunks[count])
-      hudebug.updateMsg(1, count+2, "Match found. Match chars start at "..start_i.." and end at "..end_i)
+      local current_start_i = string.find(line, stringChunks[count]) or 0
+      hudebug.updateMsg(1, count+2, "Match found. Match chars start at "..start_i.." and end at "..end_i..". Current string chunk is"..stringChunks[count])
 
       --create first string of split
       stringChunks[count] = string.sub(line, current_start_i, start_i-1)
       coloredString[count2] = textcolor1
       coloredString[count2+1] = stringChunks[count]
-      hudebug.updateMsg(1, count+3, "Match "..m.." found. Splitting into "..stringChunks[count])
+      hudebug.updateMsg(1, count+3, "Match "..m.." found. First split is"..stringChunks[count])
 
       count = count + 1
       count2 = count2 + 2

@@ -3,7 +3,7 @@ dm = {}
 dialogueLines = {}
 
 local dialoguePath = 'resources/dialogues/'
-local dialoguePattern = '[%w%d%s%!%.%,%:%;%-]+'
+local dialoguePattern = "[%w%d%s%?%!%.%,%'%:%;%-]+\n*"
 
 function ReadFiles()
   for i=1,1 do
